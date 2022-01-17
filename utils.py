@@ -1,5 +1,7 @@
 import json
 
+test = "hello"
+
 
 def get_price(date):
     with open('data.json') as file:
