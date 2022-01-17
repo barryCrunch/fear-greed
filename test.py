@@ -6,3 +6,5 @@ import time
 #     market_data = json.load(file)
 time = 1517529600
 print(get_price(time))
+
+test = "hellow thisisthe test"

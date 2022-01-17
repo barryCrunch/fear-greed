@@ -8,6 +8,7 @@ UPPER = 85
 LOWER = 15
 MULTIPLIER = .01
 
+
 def generate_trade_signals():
     # Call Fear/Greed API and then take data and order it from oldest -> newest
     response = requests.get(
@@ -35,6 +36,7 @@ def sell(timestamp, amount):
     price = get_price(timestamp)
     return amount * price
 
+
 def print_results(balance, crypto_balance, total_trades, average_purchase_price, purchases=[1000 for x in range(0, 50000, 1000)]):
     with open('data.json') as file:
         market_data = json.load(file)
@@ -47,7 +49,8 @@ def print_results(balance, crypto_balance, total_trades, average_purchase_price,
         print(f'Total Purchase Amounth: {sum(purchases)}')
 
 
-# The control case is a DCA purchasing $1000 worth of crypto over the same periord of time
+# The control case is a DCA purchasing $1000 worth of
+# crypto over the same periord of time
 def calculate_control(start_time):
     balance = 50000
     crypto_balance = 0
@@ -61,7 +64,9 @@ def calculate_control(start_time):
         balance = balance - 1000
         total_trades += 1
         prices.append(price)
-    print_results(balance, crypto_balance, total_trades, (sum(prices)/len(prices)))
+    print_results(balance, crypto_balance, total_trades,
+                  (sum(prices)/len(prices)))
+
 
 def main():
     crypto_balance = 0
@@ -70,7 +75,8 @@ def main():
     prices = []
     for signal in signals:
 
-        # If signals a buy action, purchase an amount equal to your MULTIPLIER * balance
+        # If signals a buy action, purchase an amount
+        # equal to your MULTIPLIER * balance
         if signal['trade'] == "BUY":
             amount = balance * MULTIPLIER
             purchase, price = buy(signal['timestamp'], amount)
@@ -78,7 +84,8 @@ def main():
             balance = balance - amount
             prices.append(price)
 
-        # If signals a sell action, purchase an amount equal to your MULTIPLIER * crypto_balance
+        # If signals a sell action, purchase an amount
+        # equal to your MULTIPLIER * crypto_balance
         elif signal['trade'] == "SELL":
             amount = crypto_balance * MULTIPLIER
             balance = balance + sell(signal['timestamp'], amount)
@@ -87,12 +94,14 @@ def main():
     print('*' * 10)
     print('Algo Results')
     print('*' * 10)
-    print_results(balance, crypto_balance, len(signals), (sum(prices)/len(prices)), purchases=prices)
+    print_results(balance, crypto_balance, len(signals),
+                  (sum(prices)/len(prices)), purchases=prices)
 
     print('*' * 10)
     print('Control DCA')
     print('*' * 10)
     calculate_control(signals[0]['timestamp'])
+
 
 if __name__ == "__main__":
     main()
